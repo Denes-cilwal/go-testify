@@ -9,9 +9,9 @@ services:
       - ${SERVER_PORT}:${SERVER_PORT}
       - ${DEBUG_PORT}:2345
     volumes:
-      - .:/clean_web
+      - .:/test_web
     env_file: .env
-    container_name: clean-web
+    container_name: test-web
     security_opt:
       - seccomp:unconfined
     depends_on:
@@ -25,7 +25,7 @@ services:
       MYSQL_ROOT_PASSWORD: "${DB_PASS}"
       MYSQL_DATABASE: "${DB_NAME}"
       MYSQL_ROOT_HOST: "%"
-    container_name: clean-db
+    container_name: test-db
     command:
       [
         "--character-set-server=utf8mb4",
@@ -35,7 +35,7 @@ services:
     ports:
       - 33068:3306
     volumes:
-      - clean_db:/var/lib/mysql
+      - test_db:/var/lib/mysql
 
   adminer:
     image: adminer
@@ -43,4 +43,4 @@ services:
       - ${ADMINER_PORT}:8080
 
 volumes:
-  clean_db:
+  test_db:

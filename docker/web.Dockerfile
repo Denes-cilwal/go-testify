@@ -7,14 +7,14 @@ RUN apk add inotify-tools
 
 RUN echo $GOPATH
 
-COPY . /clean_web
+COPY . /test_web
 
 RUN go get github.com/rubenv/sql-migrate/...
 
-WORKDIR /clean_web
+WORKDIR /test_web
 
 RUN go mod download
 
 RUN go get github.com/go-delve/delve/cmd/dlv
 
-CMD sh /clean_web/docker/run.sh
+CMD sh /test_web/docker/run.sh
