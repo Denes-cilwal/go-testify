@@ -1,15 +1,22 @@
 package services
 
-import "go-testify/repository"
+import (
+	"go-testify/models"
+)
 
 type UserService struct {
-	repository repository.UserRepository
+	repository models.UserRepo
 }
 
 // NewUserService is a factory function for
 // initializing a UserService with its repository layer dependencies
-func NewUserService(userrepo repository.UserRepository) UserService {
+func NewUserService(userrepo models.UserRepo) UserService {
 	return UserService{
 		repository: userrepo,
 	}
+}
+
+func (us UserService) CreateUser(user models.User) (models.User, error) {
+
+	return us.repository.CreateUser(user)
 }
