@@ -2,6 +2,7 @@ package repository
 
 import (
 	"go-testify/infrastructure"
+	"go-testify/models"
 
 	"gorm.io/gorm"
 )
@@ -20,4 +21,8 @@ func NewUserRepository(db infrastructure.Database) UserRepository {
 func (r UserRepository) WithTrx(trxHandle *gorm.DB) UserRepository {
 	r.db.DB = trxHandle
 	return r
+}
+
+func (u UserRepository) SaveUser(user models.User) (models.User, error) {
+	return user, u.db.DB.Create(user).Error
 }

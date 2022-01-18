@@ -16,3 +16,7 @@ type User struct {
 func (u User) TableName() string {
 	return "users"
 }
+
+type UserRepo interface {
+	CreateUser(user User) (User, error)
+}
