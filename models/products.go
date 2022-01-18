@@ -13,3 +13,7 @@ type Product struct {
 func (p Product) TableName() string {
 	return "products"
 }
+
+type ProductRepo interface {
+	IsProductReservable(id int) (Product, error)
+}

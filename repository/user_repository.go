@@ -23,6 +23,7 @@ func (r UserRepository) WithTrx(trxHandle *gorm.DB) UserRepository {
 	return r
 }
 
-func (u UserRepository) SaveUser(user models.User) (models.User, error) {
+func (u UserRepository) CreateUser(user models.User) (models.User, error) {
 	return user, u.db.DB.Create(user).Error
 }
+
