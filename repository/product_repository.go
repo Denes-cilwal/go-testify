@@ -21,3 +21,4 @@ func (p ProductRepository) WithTrx(trxHandle *gorm.DB) ProductRepository {
 	p.db.DB = trxHandle
 	return p
 }
+

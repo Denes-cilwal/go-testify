@@ -11,6 +11,10 @@ type UserRepository struct {
 	db infrastructure.Database
 }
 
+type UsersRepo interface {
+	FindById(id int) *models.User
+}
+
 func NewUserRepository(db infrastructure.Database) UserRepository {
 	return UserRepository{
 		db: db,
@@ -22,8 +26,3 @@ func (r UserRepository) WithTrx(trxHandle *gorm.DB) UserRepository {
 	r.db.DB = trxHandle
 	return r
 }
-
-func (u UserRepository) CreateUser(user models.User) (models.User, error) {
-	return user, u.db.DB.Create(user).Error
-}
-
