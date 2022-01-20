@@ -2,6 +2,7 @@ package services
 
 import (
 	"go-testify/models"
+	"go-testify/repository"
 	"testing"
 	"time"
 
@@ -9,22 +10,24 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type UserRepoTestifyMock struct {
-	mock.Mock
+var userRepository = &repository.UserRepositoryMock{
+	Mock: mock.Mock{}}
+var userService = UserService{
+	repository: userRepository,
 }
 
-func (u UserRepoTestifyMock) CreateUser(user models.User) (models.User, error) {
-	// user is args here ..
-	args := u.Called()
-	// get returns args at specific index
-	result := args.Get(0)
-	return result.(models.User), args.Error(1)
+func TestUserService_GetUserNotFound(t *testing.T) {
+
+	// program mock
+	userRepository.Mock.On("FindById", 1).Return(nil)
+
+	category, err := userService.Get(1)
+	assert.Nil(t, category)
+	assert.NotNil(t, err)
+
 }
 
-func TestCreateUser(t *testing.T) {
-
-	mockRepo := UserRepoTestifyMock{}
-
+func TestUserService_GetUserSuccess(t *testing.T) {
 	user := models.User{
 		Id:        1,
 		Name:      "dinesh",
@@ -32,18 +35,14 @@ func TestCreateUser(t *testing.T) {
 		Age:       25,
 		CreatedAt: time.Now(),
 	}
+	userRepository.Mock.On("FindById", 2).Return(user)
 
-	// setup expectations on mock repo
-	mockRepo.On("CreateUser").Return(user, nil)
-	testService := NewUserService(mockRepo)
-	result, err := testService.CreateUser(user)
-
-	mockRepo.AssertExpectations(t)
-
-	// assert if expected == input
-	assert.Equal(t, 1, result.Id)
-	assert.Equal(t, "dinesh", result.Name)
-	assert.Equal(t, "test@gmail.com", result.Email)
-	assert.Equal(t, 35, result.Age)
+	result, err := userService.Get(2)
 	assert.Nil(t, err)
+	assert.NotNil(t, result)
+	assert.Equal(t, user.Id, result.Id)
+	assert.Equal(t, user.Name, result.Name)
+	assert.Equal(t, user.Email, result.Email)
+	assert.Equal(t, user.Age, result.Age)
+	assert.Equal(t, user.CreatedAt, result.CreatedAt)
 }
